@@ -1,13 +1,17 @@
 # Algoritmo de bacterias
 /**Abigail Silva Diaz**/
 /*Algortimo para la case de administracion de proyectos*/
+
 import java.util.Scanner;
 
 public class Bacteria {
+    // Variable global para rastrear el número total de funciones evaluadas
+    private static int funcionesEvaluadas = 0;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Ingrese el número de secuencias: ");
+        System.out.print("Ingrese el numero de secuencias: ");
         int numSecuencias = scanner.nextInt();
 
         String[] bacterias = new String[numSecuencias];
@@ -18,7 +22,7 @@ public class Bacteria {
             bacterias[i] = bacteria;
         }
 
-        System.out.print("Ingrese el número de generaciones: ");
+        System.out.print("Ingrese el numero de generaciones: ");
         int numGeneraciones = scanner.nextInt();
 
         long startTime = System.currentTimeMillis();
@@ -27,8 +31,10 @@ public class Bacteria {
         int fuerzaMaxima = 0;
         String secuenciaBacteriaMasFuerte = "";
 
+        int fuerzaBacteriaMasFuerte = 0; // Variable para mantener el fitness de la bacteria más fuerte
+
         for (int generacion = 0; generacion < numGeneraciones; generacion++) {
-            System.out.println("\nGeneración " + (generacion + 1) + ":");
+            System.out.println("\nGeneracion " + (generacion + 1) + ":");
 
             // Crear una copia de la matriz de bacterias
             String[] nuevasBacterias = new String[numSecuencias];
@@ -44,12 +50,21 @@ public class Bacteria {
                 bacterias[i] = bacteria;  // Actualizar la matriz original con las nuevas bacterias
                 System.out.println("Bacteria " + (i + 1) + ": " + bacteria);
 
+                // Contar la fuerza de la bacteria y actualizar la fuerza máxima
                 int fuerza = contarFuerza(bacteria);
                 if (fuerza > fuerzaMaxima) {
                     fuerzaMaxima = fuerza;
                     generacionBacteriaMasFuerte = generacion + 1;
                     secuenciaBacteriaMasFuerte = bacteria;
                 }
+
+                // Actualizar el fitness de la bacteria más fuerte
+                if (fuerza > fuerzaBacteriaMasFuerte) {
+                    fuerzaBacteriaMasFuerte = fuerza;
+                }
+
+                // Incrementar el contador de funciones evaluadas
+                funcionesEvaluadas += 3;
             }
         }
 
@@ -58,15 +73,23 @@ public class Bacteria {
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 
-        System.out.println("\nLa bacteria más fuerte se encuentra en la generación " + generacionBacteriaMasFuerte);
-        System.out.println("Secuencia de la bacteria más fuerte: " + secuenciaBacteriaMasFuerte);
-        System.out.println("Tiempo de ejecución: " + totalTime + " milisegundos");
+        // Imprimir el número total de funciones evaluadas
+        System.out.println("\nNumero total de funciones evaluadas: " + funcionesEvaluadas);
+        // Imprimir el fitness de la bacteria más fuerte encontrada
+        System.out.println("Fitness de la bacteria mas fuerte: " + fuerzaBacteriaMasFuerte);
+        System.out.println("La bacteria mas fuerte se encuentra en la generacion " + generacionBacteriaMasFuerte);
+        System.out.println("Secuencia de la bacteria mas fuerte: " + secuenciaBacteriaMasFuerte);
+        System.out.println("Tiempo de ejecucion: " + totalTime + " milisegundos");
     }
 
     private static String agregarTumbo(String bacteria) {
         StringBuilder builder = new StringBuilder(bacteria);
         int posicionAleatoria = (int) (Math.random() * bacteria.length());
         builder.insert(posicionAleatoria, '-');
+
+        // Incrementar el contador de funciones evaluadas
+        funcionesEvaluadas++;
+
         return builder.toString();
     }
 
@@ -75,6 +98,9 @@ public class Bacteria {
         int posicionTumbo = builder.indexOf("-");
         if (posicionTumbo != -1) {
             builder.insert(posicionTumbo, '-');
+
+            // Incrementar el contador de funciones evaluadas
+            funcionesEvaluadas++;
         }
         return builder.toString();
     }
@@ -92,6 +118,9 @@ public class Bacteria {
         while (builder.length() < longitudDeseada) {
             int posicionAleatoria = (int) (Math.random() * (builder.length() + 1));
             builder.insert(posicionAleatoria, '-');
+
+            // Incrementar el contador de funciones evaluadas
+            funcionesEvaluadas++;
         }
         return builder.toString();
     }
@@ -103,6 +132,10 @@ public class Bacteria {
                 contadorTumbos++;
             }
         }
+
+        // Incrementar el contador de funciones evaluadas
+        funcionesEvaluadas++;
+
         return contadorTumbos;
     }
 
@@ -125,6 +158,8 @@ public class Bacteria {
                     bacterias[j] += "-";
                 }
             }
+            // Incrementar el contador de funciones evaluadas
+            funcionesEvaluadas++;
         }
     }
 }
